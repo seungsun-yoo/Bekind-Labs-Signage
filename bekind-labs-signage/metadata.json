@@ -1,0 +1,7 @@
+{
+  "name": "Bekind Labs Signage",
+  "description": "A premium, immersive digital signage experience featuring an infinite carousel of tech news, weather updates, and personalized client welcome messages with buttery-smooth animations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
