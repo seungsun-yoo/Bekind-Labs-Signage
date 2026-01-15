@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina Signage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+      @property --hue1 {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 220deg;
+      }
+      @property --hue2 {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 280deg;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #010101;
+        color: #ffffff;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-serif {
+        font-family: 'Playfair+Display', serif;
+      }
+
+      /* Ultra-dynamic Animated Background */
+      .bg-animated {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-color: #010101;
+        background-image: 
+          radial-gradient(at 10% 10%, oklch(0.2 0.08 var(--hue1) / 0.25) 0px, transparent 60%),
+          radial-gradient(at 90% 10%, oklch(0.2 0.08 var(--hue2) / 0.25) 0px, transparent 60%),
+          radial-gradient(at 50% 90%, oklch(0.2 0.08 var(--hue1) / 0.2) 0px, transparent 70%),
+          radial-gradient(at 90% 90%, oklch(0.2 0.08 var(--hue2) / 0.2) 0px, transparent 60%);
+        animation: anim_bg 25s infinite alternate ease-in-out;
+      }
+
+      @keyframes anim_bg {
+        0% {
+          --hue1: 210deg;
+          --hue2: 260deg;
+          transform: scale(1);
+        }
+        50% {
+          --hue1: 300deg;
+          --hue2: 340deg;
+          transform: scale(1.1);
+        }
+        100% {
+          --hue1: 220deg;
+          --hue2: 290deg;
+          transform: scale(1);
+        }
+      }
+
+      .glow-layer {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .glow-blob {
+        position: absolute;
+        width: 70vw;
+        height: 70vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        filter: blur(120px);
+        animation: float 25s infinite alternate ease-in-out;
+      }
+      .glow-blob-2 {
+        right: -20vw;
+        bottom: -20vw;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+        animation-delay: -7s;
+        animation-duration: 30s;
+      }
+
+      @keyframes float {
+        0% { transform: translate(-5vw, -5vh) rotate(0deg); }
+        100% { transform: translate(15vw, 15vh) rotate(15deg); }
+      }
+
+      .bg-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 100%);
+        pointer-events: none;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #444;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.26.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
