@@ -40,42 +40,56 @@ const Carousel: React.FC<CarouselProps> = ({ items, autoPlayInterval, transition
     }
   };
 
-  // Visually we want 3 items to be the main focus, but we render 5 to handle smooth sliding
-  const displayRange = [-2, -1, 0, 1, 2];
+  // Expanded range to show 9 items: 4 on each side + center
+  const displayRange = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 
   return (
     <div className="relative w-full overflow-visible h-[80vh] flex items-center justify-center">
-      <div className="flex items-center justify-center gap-12">
+      <div className="flex items-center justify-center">
         <AnimatePresence mode="popLayout" initial={false}>
           {displayRange.map((offset) => {
             const itemIndex = (index + offset + items.length * 10) % items.length;
             const item = items[itemIndex];
+            if (!item) return null;
+
             const isActive = offset === 0;
-            const isVisibleMain = Math.abs(offset) <= 1; // The 3 items we really care about
+            const absOffset = Math.abs(offset);
+            
+            // Progressive fading and scaling for 9 items
+            const opacity = isActive ? 1 : Math.max(0.1, 0.9 - (absOffset * 0.22));
+            const scale = isActive ? 1.05 : 0.85 - (absOffset * 0.08);
+            const zIndex = 30 - absOffset;
+            
+            // Non-linear spacing to keep 9 items visible on screen
+            // Center stays at 0, items next to it have a gap, further items are packed tighter
+            const xPos = offset === 0 
+              ? 0 
+              : Math.sign(offset) * (380 + (absOffset - 1) * 260);
 
             return (
               <motion.div
                 key={`${item.id}-${index}-${offset}`}
                 layout
-                initial={{ opacity: 0, scale: 0.8, x: offset * 400 }}
+                initial={{ opacity: 0, scale: 0.5, x: offset * 500 }}
                 animate={{ 
-                  opacity: isActive ? 1 : (isVisibleMain ? 0.7 : 0.2),
-                  scale: isActive ? 1.05 : 0.82,
-                  x: offset * (isActive ? 460 : 420), // Spacing adjusted for 3 main items
-                  z: isActive ? 0 : -100,
-                  filter: isActive ? 'grayscale(0%)' : 'grayscale(40%) blur(1px)',
+                  opacity,
+                  scale,
+                  x: xPos,
+                  z: isActive ? 0 : -100 * absOffset,
+                  filter: isActive ? 'grayscale(0%) blur(0px)' : `grayscale(${absOffset * 15}%) blur(${absOffset * 0.5}px)`,
                 }}
-                exit={{ opacity: 0, scale: 0.5 }}
+                exit={{ opacity: 0, scale: 0.5, x: offset * 500 }}
                 transition={{ 
                   type: "spring", 
-                  stiffness: 100, 
-                  damping: 25, 
-                  mass: 1,
+                  stiffness: 120, 
+                  damping: 20, 
+                  mass: 0.8,
                   duration: transitionSpeed / 1000
                 }}
-                className={`absolute w-[440px] aspect-[4/5] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-3xl ${
-                  isActive ? 'z-30' : 'z-10'
+                className={`absolute w-[420px] aspect-[4/5] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-3xl ${
+                  isActive ? 'z-50' : ''
                 }`}
+                style={{ zIndex }}
                 onClick={() => {
                    if (offset !== 0) setIndex((prev) => (prev + offset + items.length) % items.length);
                 }}
